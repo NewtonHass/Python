@@ -1,0 +1,114 @@
+<!-- search.html -->
+{% extends 'base.html' %}
+{% block title %}Pesquisar Veículos - A Luxury Wheels{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(to right, #99f2c8, #f12711);
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .panel {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 80%;
+        max-width: 600px;
+        margin: 20px auto;
+        text-align: center;
+    }
+
+    h1 {
+        margin-bottom: 15px;
+    }
+
+    form {
+        margin-top: 20px;
+        text-align: left;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="submit"],
+    select {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+        background-color: #333;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #1f4037;
+    }
+
+    p {
+        margin-top: 15px;
+    }
+
+    p a {
+        color: #333;
+        text-decoration: none;
+    }
+
+    p a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<div class="panel">
+    <h1>Pesquisar Veículos</h1>
+    <form method="POST" action="{{ url_for('search') }}">
+        <label>Categoria:</label>
+        <select name="categoria">
+            <option value="">Selecione...</option>
+            <option value="Pequeno">Pequeno</option>
+            <option value="Médio">Médio</option>
+            <option value="Grande">Grande</option>
+            <option value="SUV">SUV</option>
+            <option value="Luxo">Luxo</option>
+        </select><br>
+        <label>Transmissão:</label>
+        <select name="transmissao">
+            <option value="">Selecione...</option>
+            <option value="Automático">Automático</option>
+            <option value="Manual">Manual</option>
+        </select><br>
+        <label>Tipo do Veículo:</label>
+        <select name="tipo">
+            <option value="">Selecione...</option>
+            <option value="Carro">Carro</option>
+            <option value="Moto">Moto</option>
+        </select><br>
+        <label>Valor da Diária (Máximo):</label>
+        <input type="text" name="valor_diaria" placeholder="Informe o valor máximo"><br>
+        <label>Capacidade de Pessoas:</label>
+        <select name="capacidade_pessoas">
+            <option value="">Selecione...</option>
+            <option value="2">2 pessoas</option>
+            <option value="4">4-5 pessoas</option>
+            <option value="7">Até 7 pessoas</option>
+        </select><br>
+        <input type="submit" value="Pesquisar">
+    </form>
+    <p><a href="{{ url_for('dashboard') }}">Voltar ao Dashboard</a></p>
+</div>
+{% endblock %}

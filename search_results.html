@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados da Pesquisa - A Luxury Wheels</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #99f2c8, #f12711);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center; /* Centraliza todo o conteúdo */
+        }
+
+        .panel {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            width: 80%;
+            max-width: 800px;
+            margin: 20px auto;
+            text-align: left; /* Alinha o texto à esquerda dentro do painel */
+        }
+
+        h1 {
+            margin-bottom: 15px;
+        }
+
+        .card {
+            background-color: #f2f2f2;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: left; /* Alinha o texto à esquerda dentro das cartas */
+        }
+
+        .card-header {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .card-content {
+            margin-bottom: 10px;
+            text-align: center; /* Centraliza o conteúdo dentro das cartas */
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Centraliza os elementos do formulário */
+        }
+
+        form label {
+            display: block; /* Garante que os labels ocupem uma linha inteira */
+            margin-bottom: 5px;
+        }
+
+        form input[type="date"],
+        form select,
+        form button {
+            margin: 5px; /* Espaçamento entre os elementos */
+        }
+
+        p {
+            margin-top: 15px;
+            font-family: Arial, sans-serif; /* Define a fonte para o texto dentro dos parágrafos */
+            font-size: 16px; /* Define o tamanho da fonte para o texto dentro dos parágrafos */
+            text-align: center; /* Centraliza o texto dentro dos parágrafos */
+        }
+
+        p a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        p a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="panel">
+    <h1>Resultados da Pesquisa</h1>
+    {% if veiculos %}
+        {% for veiculo in veiculos %}
+            <div class="card">
+                <div class="card-header">{{ veiculo.marca }} {{ veiculo.modelo }}</div>
+                <div class="card-content">
+                    <p><strong>Categoria:</strong> {{ veiculo.categoria }}</p>
+                    <p><strong>Transmissão:</strong> {{ veiculo.transmissao }}</p>
+                    <p><strong>Tipo do Veículo:</strong> {{ veiculo.tipo_veiculo }}</p>
+                    <p><strong>Valor Diária:</strong> € {{ veiculo.valor_diaria }}</p>
+                    <p><strong>Capacidade de Pessoas:</strong> {{ veiculo.quantidade_pessoas }}</p>
+                    <form action="{{ url_for('reservar') }}" method="post">
+                        <input type="hidden" name="id_veiculo" value="{{ veiculo.id_veiculo }}">
+                        <label for="data_inicio">Data de Início:</label>
+                        <input type="date" id="data_inicio" name="data_inicio" required><br>
+                        <label for="data_fim">Data de Fim:</label>
+                        <input type="date" id="data_fim" name="data_fim" required><br>
+                        <label for="forma_pagamento">Forma de Pagamento:</label>
+                        <select id="forma_pagamento" name="forma_pagamento" required>
+                            <option value="Dinheiro">Dinheiro</option>
+                            <option value="Transferência">Transferência</option>
+                            <option value="Mbway">Mbway</option>
+                            <option value="Multibanco">Multibanco</option>
+                        </select><br>
+                        <input type="hidden" id="valor_diaria" name="valor_diaria" value="{{ veiculo.valor_diaria }}">
+                        <p>Total Estimado: € <span id="valor_total">0.00</span></p>
+                        <button type="submit">Reservar</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Nenhum veículo encontrado com os critérios selecionados.</p>
+    {% endif %}
+    <p><a href="{{ url_for('dashboard') }}">Voltar ao Dashboard</a></p>
+</div>
+
+<script>
+    // Cálculo do valor total ao selecionar as datas
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.querySelector('form');
+
+        form.addEventListener('submit', function(event) {
+            event.preventDefault(); // Evita o envio padrão do formulário
+
+            // Coletar os dados do formulário
+            const idVeiculo = form.querySelector('input[name="id_veiculo"]').value;
+            const dataInicio = form.querySelector('input[name="data_inicio"]').value;
+            const dataFim = form.querySelector('input[name="data_fim"]').value;
+            const formaPagamento = form.querySelector('select[name="forma_pagamento"]').value;
+            const valorDiaria = parseFloat(form.querySelector('input[name="valor_diaria"]').value);
+
+            // Validar se as datas estão preenchidas
+            if (!dataInicio || !dataFim) {
+                alert('Por favor, selecione a data de início e a data de fim.');
+                return;
+            }
+
+            // Calcular o valor total estimado
+            const inicio = new Date(dataInicio);
+            const fim = new Date(dataFim);
+            const diffTime = Math.abs(fim - inicio);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const total = valorDiaria * diffDays;
+
+            // Exibir o valor total estimado na página
+            const valorTotalElement = form.querySelector('#valor_total');
+            valorTotalElement.textContent = total.toFixed(2);
+
+            // Simular envio do formulário para a rota de reserva
+            const formData = new FormData(form);
+            fetch(form.action, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Redirecionar para a página de confirmação de reserva, se necessário
+                    window.location.href = response.url; // Redireciona para onde a rota enviar
+                } else {
+                    throw new Error('Erro ao processar a reserva.');
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                // Tratar o erro de forma adequada, exibir mensagem para o usuário, etc.
+            });
+        });
+
+        // Atualizar o valor total ao selecionar as datas
+        const dataInicio = form.querySelector('#data_inicio');
+        const dataFim = form.querySelector('#data_fim');
+        const valorDiaria = parseFloat(form.querySelector('#valor_diaria').value);
+        const valorTotalElement = form.querySelector('#valor_total');
+
+        dataInicio.addEventListener('change', calcularValorTotal);
+        dataFim.addEventListener('change', calcularValorTotal);
+
+        function calcularValorTotal() {
+            const inicio = new Date(dataInicio.value);
+            const fim = new Date(dataFim.value);
+            const diffTime = Math.abs(fim - inicio);
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            const total = valorDiaria * diffDays;
+            valorTotalElement.textContent = total.toFixed(2);
+        }
+    });
+</script>
+
+</body>
+</html>

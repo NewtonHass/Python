@@ -1,0 +1,136 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - A Luxury Wheels{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f8f9fa;
+        font-family: Arial, sans-serif;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    h1 {
+        margin-bottom: 15px;
+        text-align: center;
+    }
+
+    .info-box {
+        background-color: #f1f1f1;
+        border-radius: 5px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .info-box h2 {
+        margin-top: 0;
+        color: #333;
+    }
+
+    .info-box p {
+        margin-bottom: 0;
+        color: #666;
+    }
+
+    .reservation-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .reservation-table th, .reservation-table td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .reservation-table th {
+        background-color: #f2f2f2;
+    }
+
+    .reservation-table td {
+        background-color: #fff;
+    }
+
+    .reservation-table td.center {
+        text-align: center;
+    }
+
+    .reservation-table td.actions {
+        text-align: center;
+    }
+
+    .logout-btn {
+        background-color: #dc3545;
+        color: #fff;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .logout-btn:hover {
+        background-color: #c82333;
+    }
+</style>
+
+<div class="container">
+    <h1>Dashboard</h1>
+
+    <div class="info-box">
+        <h2>Olá, {{ username }}</h2>
+        <p>Bem-vindo ao seu painel de controle.</p>
+    </div>
+
+    <div class="info-box">
+        <h2>Minhas Reservas</h2>
+        {% if reservations %}
+            <table class="reservation-table">
+                <thead>
+                    <tr>
+                        <th>ID da Reserva</th>
+                        <th>ID do Veículo</th>
+                        <th>Data de Início</th>
+                        <th>Data de Fim</th>
+                        <th>Valor Total</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reserva in reservations %}
+                        <tr>
+                            <td>{{ reserva.id }}</td>
+                            <td>{{ reserva.id_veiculo }}</td>
+                            <td>{{ reserva.data_inicio.strftime('%d/%m/%Y') }}</td>
+                            <td>{{ reserva.data_fim.strftime('%d/%m/%Y') }}</td>
+                            <td>{{ reserva.valor_total }}</td>
+                            <td class="actions">
+                                <a href="#" class="btn btn-sm btn-outline-primary">Detalhes</a>
+                                <a href="#" class="btn btn-sm btn-outline-danger">Cancelar</a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>Você não possui reservas.</p>
+        {% endif %}
+    </div>
+
+    <div class="info-box">
+        <p><a href="{{ url_for('search') }}">Pesquisar Veículos</a></p>
+    </div>
+
+    <form action="{{ url_for('logout') }}" method="post">
+        <button type="submit" class="logout-btn">Logout</button>
+    </form>
+</div>
+{% endblock %}

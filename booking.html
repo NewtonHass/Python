@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Vehicle Reservation - A Luxury Wheels{% endblock %}
+
+{% block content %}
+    <h1>Vehicle Reservation</h1>
+    <form method="POST" action="{{ url_for('book_vehicle', vehicle_id=vehicle.id) }}">
+        <label for="start_date">Start Date:</label>
+        <input type="date" id="start_date" name="start_date" required><br>
+
+        <label for="end_date">End Date:</label>
+        <input type="date" id="end_date" name="end_date" required><br>
+
+        <label for="payment_method">Payment Method:</label>
+        <select id="payment_method" name="payment_method" required>
+            <option value="Credit Card">Credit Card</option>
+            <option value="Bank Transfer">Bank Transfer</option>
+            <option value="Cash">Cash</option>
+        </select><br>
+
+        <button type="submit">Complete Reservation</button>
+    </form>
+{% endblock %}

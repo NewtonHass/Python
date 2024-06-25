@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}Minhas Reservas - A Luxury Wheels{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(to right, #99f2c8, #f12711);
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 20px auto;
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+    }
+
+    h1 {
+        margin-bottom: 15px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    th, td {
+        border: 1px solid #ccc;
+        padding: 8px;
+        text-align: left;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+</style>
+
+<div class="container">
+    <h1>Minhas Reservas</h1>
+    {% if reservations %}
+        <table>
+            <thead>
+                <tr>
+                    <th>ID da Reserva</th>
+                    <th>ID do Veículo</th>
+                    <th>Data de Início</th>
+                    <th>Data de Fim</th>
+                    <th>Forma de Pagamento</th>
+                    <th>Valor Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for reserva in reservations %}
+                <tr>
+                    <td>{{ reserva.id }}</td>
+                    <td>{{ reserva.id_veiculo }}</td>
+                    <td>{{ reserva.data_inicio.strftime('%d/%m/%Y') }}</td>
+                    <td>{{ reserva.data_fim.strftime('%d/%m/%Y') }}</td>
+                    <td>{{ reserva.forma_pagamento }}</td>
+                    <td>{{ reserva.valor_total }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Você não possui reservas.</p>
+    {% endif %}
+    <p><a href="{{ url_for('dashboard') }}">Voltar ao Dashboard</a></p>
+</div>
+{% endblock %}

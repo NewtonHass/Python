@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block title %}Cadastro - A Luxury Wheels{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(to right, #99f2c8, #f12711);
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+    }
+
+    form {
+        background-color: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 80%;
+        max-width: 400px;
+        margin: 20px auto;
+        text-align: center;
+    }
+
+    h1 {
+        margin-bottom: 15px;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="submit"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    input[type="submit"] {
+        background-color: #333;
+        color: #fff;
+        border: none;
+        cursor: pointer;
+    }
+
+    input[type="submit"]:hover {
+        background-color: #1f4037;
+    }
+
+    p {
+        margin-top: 15px;
+    }
+
+    p a {
+        color: #333;
+        text-decoration: none;
+    }
+
+    p a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<h1>Cadastro</h1>
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <ul>
+      {% for category, message in messages %}
+        <li class="{{ category }}">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<form method="POST" action="{{ url_for('signup') }}">
+    <label for="username">Nome de Usuário:</label>
+    <input type="text" id="username" name="username" required><br>
+
+    <label for="endereco">Endereço:</label>
+    <input type="text" id="endereco" name="endereco" required><br>
+
+    <label for="telefone">Telefone:</label>
+    <input type="text" id="telefone" name="telefone" required><br>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required><br>
+
+    <label for="password">Senha:</label>
+    <input type="password" id="password" name="password" required><br>
+
+    <input type="submit" value="Cadastrar">
+</form>
+<p>Já tem uma conta? <a href="{{ url_for('login') }}">Faça login aqui</a>.</p>
+{% endblock %}
